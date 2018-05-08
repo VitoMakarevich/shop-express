@@ -1,15 +1,12 @@
-const generalErrorHandler = (_) => (error, req, res, next) => {
-  if (error.code) {
-    return res
-      .status(error.code)
-      .json({error: error.message});
-  }
+const {errorHandler: {generalErrorHandler}} = require('services');
+const generalErrorMiddleware = () => async (error, req, res, next) => {
+  const errorForSend = generalErrorHandler(error);
 
   res
-    .status(505)
-    .json({error: error.message});
+    .status(errorForSend.status)
+    .json(errorForSend.message);
 };
 
 module.exports = {
-  generalErrorHandler,
+  generalErrorMiddleware
 };

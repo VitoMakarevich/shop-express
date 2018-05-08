@@ -16,4 +16,10 @@ router.post('/',
   })
 );
 
+router.delete('/:id',
+  validate(schema.remove),
+  wrapAsync(async (req, res) => {
+
+}))
+
 module.exports = router;

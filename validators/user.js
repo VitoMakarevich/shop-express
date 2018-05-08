@@ -5,6 +5,9 @@ const create = joi.object().required().keys({
   password: joi.string().min(5).max(20).required(),
 });
 
+const remove = joi.object().optional().keys({});
+
 module.exports = {
   create,
+  remove
 };

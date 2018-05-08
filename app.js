@@ -19,6 +19,6 @@ app.use(commonMiddlewares.appendSession);
 
 app.use(controllers);
 
-app.use(errorMiddlewares.generalErrorHandler());
+app.use(errorMiddlewares.generalErrorMiddleware());
 
 module.exports = app;
