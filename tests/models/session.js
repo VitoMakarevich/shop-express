@@ -2,6 +2,7 @@ const {assert} = require('chai');
 const sinon = require('sinon');
 const sandbox = sinon.createSandbox();
 const {Session: SessionModel} = require('models');
+const {NotFoundError} = require('errors');
 const {redis} = require('modules');
 
 describe('Session model tests', () => {
@@ -71,5 +72,65 @@ describe('Session model tests', () => {
     assert.isTrue(redisModuleStub.calledOnce);
     // eslint-disable-next-line
     assert.match(result, /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/);
+  });
+
+  it('should found session', async () => {
+    const redisStub = {
+      keys: async (pattern) => {
+        // eslint-disable-next-line
+        const key = '123'
+        assert.match(pattern, new RegExp(`${key}-`));
+
+        return [key];
+      },
+      get: async (key) => {
+        const expectedKey = '123';
+        assert.equal(key, expectedKey);
+
+        const session = {
+          profileId: 1,
+        };
+
+        return session;
+      },
+    };
+
+    const redisModuleStub = sandbox.stub(
+      redis,
+      'connect'
+    )
+      .resolves(redisStub);
+
+    const result = await SessionModel.findById(123);
+
+    const expectedSession = {
+      profileId: 1,
+    };
+    assert.deepEqual(result, expectedSession);
+    assert.isTrue(redisModuleStub.calledOnce);
+  });
+
+  it('should throw error not found', async () => {
+    const redisStub = {
+      keys: async (pattern) => {
+        // eslint-disable-next-line
+        const key = '123'
+        assert.match(pattern, new RegExp(`${key}-`));
+
+        const emptyKeysSet = [];
+        return emptyKeysSet;
+      },
+    };
+
+    const redisModuleStub = sandbox.stub(
+      redis,
+      'connect'
+    )
+      .resolves(redisStub);
+    try {
+      assert.throws(await SessionModel.findById(123), NotFoundError);
+    } catch (error) {
+    }
+    assert.isTrue(redisModuleStub.calledOnce);
   });
 });

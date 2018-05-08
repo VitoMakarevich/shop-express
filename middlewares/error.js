@@ -8,5 +8,5 @@ const generalErrorMiddleware = () => async (error, req, res, next) => {
 };
 
 module.exports = {
-  generalErrorMiddleware
+  generalErrorMiddleware,
 };
