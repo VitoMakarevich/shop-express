@@ -1,5 +1,6 @@
 const {assert} = require('chai');
 const {user: UserService} = require('services');
+// eslint-disable-next-line
 const {User: UserModel, Session: SessionModel} = require('models');
 const {passwordUtils} = require('helpers');
 const sinon = require('sinon');

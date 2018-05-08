@@ -21,8 +21,8 @@ const validate = (schema) => {
       const validationError = new ValidationError(validation.error);
       next(validationError);
     } else {
-next();
-}
+      next();
+    }
   };
 
   return validateMiddleware;
