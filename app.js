@@ -1,13 +1,24 @@
-var express = require('express')
-  , app = express()
-  , bodyParser = require('body-parser')
-  , port = process.env.PORT || 3000
+process.on('unhandledRejection', (code, error) => {
+  console.error(code, error);
+});
 
-app.use(express.static(__dirname + '/public'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(require('./controllers'))
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const {
+  common: commonMiddlewares,
+  error: errorMiddlewares,
+} = require('middlewares');
+const controllers = require('./controllers');
 
-app.listen(port, function() {
-  console.log('Listening on port ' + port)
-})
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+app.use(commonMiddlewares.appendSession);
+
+app.use(controllers);
+
+app.use(errorMiddlewares.generalErrorHandler());
+
+module.exports = app;

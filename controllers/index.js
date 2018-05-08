@@ -1,11 +1,8 @@
-var express = require('express')
-  , router = express.Router()
+const express = require('express');
+// eslint-disable-next-line
+const router = express.Router();
+const userController = require('./users');
 
-router.use('/comments', require('./comments'))
-router.use('/users', require('./users'))
+router.use('/users', userController);
 
-router.get('/', function(req, res) {
-  res.render('index')
-})
-
-module.exports = router
+module.exports = router;

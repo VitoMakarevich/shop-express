@@ -1,28 +1,47 @@
 {
-  "name": "Base",
+  "name": "shop",
   "version": "1.0.0",
-  "description": "Basic structure for Express web apps.",
+  "description": "Shop express app",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "node_modules/.bin/mocha tests/**"
+    "start": "NODE_ENV=dev NODE_PATH=. node server.js",
+    "test": "NODE_ENV=test NODE_PATH=. node_modules/.bin/mocha tests/*",
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ignore-path .gitignore .",
+    "migrate:up:dev": "NODE_ENV=dev node_modules/.bin/sequelize db:migrate",
+    "migrate:up:test": "NODE_ENV=test node_modules/.bin/sequelize db:migrate",
+    "migrate:up:production": "NODE_ENV=production node_modules/.bin/sequelize db:migrate",
+    "migrate:down:dev": "NODE_ENV=dev node_modules/.bin/sequelize db:migrate:undo",
+    "migrate:down:test": "NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo",
+    "migrate:down:production": "NODE_ENV=production node_modules/.bin/sequelize db:migrate:undo",
+    "migrate:up": "npm-run-all -p migrate:up:dev migrate:up:test migrate:up:production",
+    "migrate:down": "npm-run-all -p migrate:down:dev migrate:down:test migrate:down:production"
   },
   "keywords": [
-    "base",
-    "project",
+    "shop",
     "node",
-    "express",
-    "structure"
+    "express"
   ],
-  "author": "Terlici Ltd.",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.12.3",
+    "chai": "^4.1.2",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.3",
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
     "express": "^4.12.3",
-    "jade": "^1.9.2"
+    "joi": "^13.2.0",
+    "pg": "^7.4.2",
+    "redis": "^2.8.0",
+    "sequelize": "^4.37.7",
+    "sequelize-cli": "^4.0.0",
+    "sinon": "^5.0.6",
+    "supertest": "^3.0.0",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "mocha": "^2.2.4",
-    "should": "^6.0.1"
+    "mocha": "^2.2.4"
   }
 }
