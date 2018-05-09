@@ -71,7 +71,7 @@ describe('User api test', (_) => {
       assert.equal(res.status, expectedStatus);
     });
 
-    it('should throw error', async () => {
+    it('should signIn', async () => {
       const request = {
         name: 'valid',
         password: 'valid',

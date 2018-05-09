@@ -1,18 +1,31 @@
 const {auth: authService} = require('services');
-const {AccessDeniedError} = require('errors');
+const {AccessDeniedError, CustomError} = require('errors');
+const {strings} = require('assets');
 
-const checkAuth = () => {
+const checkSigned = () => {
   return async (req, res, next) => {
     const sessionId = req.cookie.session;
     const session = await authService.checkAuth(sessionId);
     if (session) {
-next();
+      next();
+    } else {
+      next(new AccessDeniedError);
+    }
+  };
+};
+
+const checkUnsigned = () => {
+  return async (req, res, next) => {
+    const sessionId = req.cookies.session;
+    if (sessionId) {
+next(new CustomError(strings.userAlreadySigned));
 } else {
-next(new AccessDeniedError);
+next();
 }
   };
 };
 
 module.exports = {
-  checkAuth,
+  checkSigned,
+  checkUnsigned,
 };

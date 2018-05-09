@@ -2,7 +2,7 @@ const express = require('express');
 // eslint-disable-next-line
 const router = express.Router();
 const {common: {wrapAsync}} = require('helpers');
-const {common: {validate}} = require('middlewares');
+const {common: {validate}, auth: {checkUnsigned}} = require('middlewares');
 const {user: userService} = require('services');
 const {user: schema} = require('validators');
 
@@ -17,14 +17,12 @@ router.post('/',
 
 router.post('/signIn',
   validate(schema.signIn),
+  checkUnsigned(),
   wrapAsync(async (req, res) => {
     const {name, password} = req.body;
 
     const {sessionId, user} = await userService.checkSignIn({name, password});
-
-    res.clearCookie('session');
     res.cookie('session', sessionId);
-
     res.send(user);
   })
 );
